@@ -69,9 +69,7 @@ Int_t drawData(const char *file)
     for(Int_t i = 0;i < 10;i++)
     {
       textFileIn >> data[i];
-    }
-    std::cout << data[0] << " " << data[1] << " " << data[2] << " " << data[3] << " " << data[4] <<  std::endl;
-    
+     } 
     for(Int_t i = 0;i < 5;i++)
     {
       hist1[i]->Fill(data[i]);
