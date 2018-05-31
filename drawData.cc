@@ -10,7 +10,7 @@ Int_t drawData(const char *file)
   TString fileName(file);
   TString textFileName(fileName + ".txt");
   TString rootFileName(fileName + ".root");
-  
+  TString PDFfileName(fileName + ".pdf");
   std::ifstream textFileIn(textFileName.Data(), ios::in);
   if(!textFileIn.is_open())
   {
@@ -101,6 +101,12 @@ Int_t drawData(const char *file)
     c3->cd(i+1);
     hist3[i]->Draw();
   }
+  
+  // save as PDF
+  c1->Print(PDFfileName + "(");
+  c2->Print(PDFfileName);
+  c3->Print(PDFfileName + ")");
+
 
   std::cout << "The # of events : " << nev << std::endl;
   return 1;

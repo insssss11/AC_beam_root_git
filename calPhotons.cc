@@ -17,7 +17,7 @@ Double_t GetBeta(Double_t p) // unit is MeV/c
 Int_t calPhotons(Double_t p)
 {
   Double_t beta = GetBeta(p);
-  Double_t dz   = WIDTH/Sin(ANGLE);
+  Double_t dz   = WIDTH/Cos(ANGLE);
 
   Int_t nPhotons = (Int_t)2*Pi()*(1. - 1./(RINDEX*RINDEX*beta*beta))*(1./L_MIN - 1./L_MAX)*dz/137;
   std::cout << "The unit of input momentum is MeV/c." << std::endl;
