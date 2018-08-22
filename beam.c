@@ -7,27 +7,40 @@ void beam(int runno=1){
   sprintf(outfile,"bm%02d.root",runno);
   
   std::ifstream inf1(infile);
-  int adc1, adc2, adc3, adc4, adc5, tdc1, tdc2, tdc3, tdc4, tdc5;
-
+  TFile * fout=new TFile(TString("tree/") + outfile,"recreate");
+  int data[10];
   TTree * tree = new TTree("tree","title");
 
-  tree->Branch("adc1",&adc1,"adc1/I");
-  tree->Branch("adc2",&adc2,"adc2/I");
-  tree->Branch("adc3",&adc3,"adc3/I");
-  tree->Branch("adc4",&adc4,"adc4/I");
-  tree->Branch("adc5",&adc5,"adc5/I");
-  tree->Branch("tdc1",&tdc1,"adc1/I");
-  tree->Branch("tdc2",&tdc2,"adc2/I");
-  tree->Branch("tdc3",&tdc3,"adc3/I");
-  tree->Branch("tdc4",&tdc4,"tdc4/I");
-  tree->Branch("tdc5",&tdc5,"tdc5/I");
+  tree->Branch(TString::Format("bm0%d", runno), data, "ADC[5]/I:TDC[5]");
 
 
-  while(inf1>>adc1>>adc2>>adc3>>adc4>>adc5>>tdc1>>tdc2>>tdc3>>tdc4>>tdc5){
+  while(true){
+    inf1 >> data[0] >> data[1] >> data[2] >> data[3] >> data[4] >> data[5] >> data[6] >> data[7] >> data[8] >> data[9];
+    if(inf1.eof())
+      break;
     tree->Fill();
   }
-  
-  TFile * fout=new TFile(outfile,"recreate");
-  tree->Write();
-  //  fout->Close();
+
+  TCanvas *c1 = new TCanvas("ADC");
+  TCanvas *c2 = new TCanvas("TDC");
+  TCanvas *c3 = new TCanvas("ADCvsTDC");
+  c1->Divide(3,2);
+  c2->Divide(3,2);
+  c3->Divide(3,2);
+
+  for(Int_t i = 1;i <=5;i++)
+  {
+    c1->cd(i);
+    tree->Draw(TString::Format("ADC[%d]", i-1));
+    c2->cd(i);
+    tree->Draw(TString::Format("TDC[%d]", i-1));
+    c3->cd(i);
+    tree->Draw(TString::Format("TDC[%d]:ADC[%d]", i-1, i-1));
+  }
+
+
+  fout->Write();
+  inf1.close();
+  fout->Close();
+  delete fout;
 }
